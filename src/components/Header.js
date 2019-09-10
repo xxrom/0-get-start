@@ -2,6 +2,7 @@ import React from "react";
 import { useQuery } from "@apollo/react-hooks";
 import gql from "graphql-tag";
 import styled from "styled-components";
+import get from "lodash/get";
 
 const BOOKS = gql`
   {
@@ -16,7 +17,7 @@ const Header = props => {
   const { loading, error, data } = useQuery(BOOKS);
   console.log("data", data);
   const books =
-    Array.isArray(data.books) &&
+    Array.isArray(get(data, "books", "")) &&
     data.books.map((item, index) => (
       <Wrapper key={index}>
         <Title>{item.title}</Title>
@@ -27,7 +28,7 @@ const Header = props => {
     <div>
       <h1>Header</h1>
       <h2>{loading ? "loading" : "ready!"}</h2>
-      <div>{error ? <h1>error</h1> : ""}</div>
+      <div>{error ? <h1>{error.message}</h1> : ""}</div>
       {books}
     </div>
   );
